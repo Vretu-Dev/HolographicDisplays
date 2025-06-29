@@ -34,7 +34,8 @@ namespace HolographicDisplays
                     Name = holo.Name,
                     Content = holo.Text,
                     RoomType = holo.RoomType,
-                    LocalPosition = new Vector3(holo.X, holo.Y, holo.Z)
+                    LocalPosition = new Vector3(holo.X, holo.Y, holo.Z),
+                    SyncDistance = holo.SyncDistance > 0 ? holo.SyncDistance : 32f
                 };
                 h.Spawn();
                 Holograms.Add(h);
@@ -50,7 +51,8 @@ namespace HolographicDisplays
                 RoomType = h.RoomType,
                 X = h.LocalPosition.x,
                 Y = h.LocalPosition.y,
-                Z = h.LocalPosition.z
+                Z = h.LocalPosition.z,
+                SyncDistance = h.SyncDistance
             }).ToList();
             var serializer = new SerializerBuilder().Build();
             File.WriteAllText(FilePath, serializer.Serialize(list));
@@ -111,6 +113,7 @@ namespace HolographicDisplays
             public float X { get; set; }
             public float Y { get; set; }
             public float Z { get; set; }
+            public float SyncDistance { get; set; } = 32f;
         }
     }
 }

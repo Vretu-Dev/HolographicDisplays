@@ -13,6 +13,7 @@ namespace HolographicDisplays
         public string Content;
         public string RoomType;
         public Vector3 LocalPosition;
+        public float SyncDistance = 32f;
         public TextToy Toy { get; private set; }
 
         public Vector3 GetWorldPosition()
@@ -35,7 +36,7 @@ namespace HolographicDisplays
             Vector3 pos = GetWorldPosition();
 
             Toy = Object.Instantiate(prefab, pos, Quaternion.identity);
-            Toy.TextFormat = Content;
+            Toy.TextFormat = Placeholders.Replace(Content);
             Toy.Scale = size ?? new Vector2(0.15f, 0.05f);
 
             NetworkServer.Spawn(Toy.gameObject);
@@ -63,7 +64,7 @@ namespace HolographicDisplays
             foreach (var player in Player.List)
             {
                 float dist = Vector3.Distance(pos, player.Position);
-                if (dist < minDist && dist <= 32f)
+                if (dist < minDist && dist <= SyncDistance)
                 {
                     minDist = dist;
                     nearest = player;
