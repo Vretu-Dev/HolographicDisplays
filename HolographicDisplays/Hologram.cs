@@ -65,6 +65,9 @@ namespace HolographicDisplays
                 if (!player.IsConnected || player.Role.Type == RoleTypeId.Spectator)
                     continue;
 
+                if (Vector3.Distance(player.Position, pos) > SyncDistance)
+                    continue;
+
                 Vector3 dir = player.CameraTransform.position - pos;
                 if (dir.sqrMagnitude < 0.01f) continue;
 
