@@ -17,6 +17,7 @@ namespace HolographicDisplays
             Instance = this;
             Exiled.Events.Handlers.Server.RoundStarted += OnRoundStarted;
             Exiled.Events.Handlers.Server.WaitingForPlayers += OnWaitingForPlayers;
+            Placeholders.RegisterEvents();
             base.OnEnabled();
         }
 
@@ -27,6 +28,7 @@ namespace HolographicDisplays
             Exiled.Events.Handlers.Server.WaitingForPlayers -= OnWaitingForPlayers;
             HologramRotationUpdater.Stop();
             HologramManager.DestroyAll();
+            Placeholders.UnregisterEvents();
             base.OnDisabled();
         }
 

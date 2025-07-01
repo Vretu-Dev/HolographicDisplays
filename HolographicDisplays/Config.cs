@@ -8,10 +8,13 @@ namespace HolographicDisplays
     {
         public bool IsEnabled { get; set; } = true;
         public bool Debug { get; set; } = false;
-        
+
         [Description("Interval for updating hologram placeholders in seconds.")]
-        public float PlaceholderUpdateInterval { get; set; } = 10f;
+        public float PlaceholderUpdateInterval { get; set; } = 2f;
         
+        [Description("Interval for updating hologram rotation (player-facing) in milliseconds.")]
+        public int RotationUpdateInterval { get; set; } = 10;
+
         [Description("UTC Time Zone | 2 = UTC+2")]
         public int TimeZone { get; set; } = 2;
     }
