@@ -28,3 +28,17 @@ hd delete Entrance
 hd reload
 hd list
 ```
+
+Placeholders:
+```
+{server_name}        - The name of the server.
+{players}            - The current number of connected players.
+{max_players}        - The maximum number of players allowed on the server.
+{server_tps}         - The current server TPS (ticks per second).
+{server_maxtps}      - The maximum possible TPS (usually 60).
+{round_time}         - The duration of the current round (format: mm:ss).
+{time}               - The current system time (HH:mm).
+{total_escaped}      - The total number of players who escaped.
+{classd_escaped}     - The number of Class-D players who escaped.
+{scientist_escaped}  - The number of scientists who escaped.
+```
