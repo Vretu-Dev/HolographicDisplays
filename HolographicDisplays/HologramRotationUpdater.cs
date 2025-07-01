@@ -7,8 +7,10 @@ namespace HolographicDisplays
     public static class HologramRotationUpdater
     {
         private static CoroutineHandle _handle;
-        private static float _textUpdateInterval = 0.5f;
-        private static float _textUpdateTimer = 0f;
+        private static float _fastUpdateInterval = 0.5f;
+        private static float _slowUpdateInterval => HolographicDisplays.Instance.Config.PlaceholderUpdateInterval;
+        private static float _fastUpdateTimer = 0f;
+        private static float _slowUpdateTimer = 0f;
 
         public static void Start()
         {
@@ -24,26 +26,40 @@ namespace HolographicDisplays
 
         private static IEnumerator<float> RotationLoop()
         {
-            string[] placeholders = { "%players%", "%server_tps%", "%round_time%" };
+            string[] fast_placeholders = { "{round_time}" };
+            string[] slow_placeholders = { "{players}", "{server_tps}", "{time}" };
 
             while (true)
             {
                 foreach (var holo in HologramManager.Holograms)
                 {
-                    holo.SyncRotationToNearest();
+                    holo.SyncRotationPerPlayer();
                 }
 
-                _textUpdateTimer += 0.01f;
-                if (_textUpdateTimer >= _textUpdateInterval)
+                _fastUpdateTimer += 0.05f;
+                _slowUpdateTimer += 0.05f;
+
+                if (_fastUpdateTimer >= _fastUpdateInterval)
                 {
                     foreach (var holo in HologramManager.Holograms)
                     {
-                        if (holo.Toy != null && placeholders.Any(ph => holo.Content.Contains(ph)))
+                        if (holo.Toy != null && fast_placeholders.Any(ph => holo.Content.Contains(ph)))
                             holo.Toy.TextFormat = Placeholders.Replace(holo.Content);
                     }
-                    _textUpdateTimer = 0f;
+                    _fastUpdateTimer = 0f;
                 }
-                yield return Timing.WaitForSeconds(0.01f);
+
+                if (_slowUpdateTimer >= _slowUpdateInterval)
+                {
+                    foreach (var holo in HologramManager.Holograms)
+                    {
+                        if (holo.Toy != null && slow_placeholders.Any(ph => holo.Content.Contains(ph)))
+                            holo.Toy.TextFormat = Placeholders.Replace(holo.Content);
+                    }
+                    _slowUpdateTimer = 0f;
+                }
+
+                yield return Timing.WaitForSeconds(0.05f);
             }
         }
     }

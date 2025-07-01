@@ -31,7 +31,15 @@ namespace HolographicDisplays.Commands
 
             if (arguments.Count == 0)
             {
-                response = "Using: create [name] [text] | delete [name] | edit [name] [new text] | list";
+                response = "Commands: \n" +
+                           "hd create [name] [text] - Creates a hologram at your position\n" +
+                           "hd delete [name] - Deletes the hologram\n" +
+                           "hd edit [name] [new text] - Changes the text of the hologram\n" +
+                           "hd movehere [name] - Changes the position of the hologram to your position\n" +
+                           "hd copy [fromHologram] [toHologram] - Copies the contents of one hologram to another\n" +
+                           "hd teleport [name] - Teleports you to the selected hologram\n" +
+                           "hd list \n" +
+                           "hd reload \n";
                 return false;
             }
 
@@ -53,7 +61,11 @@ namespace HolographicDisplays.Commands
                         response = "Using: hd delete [name]";
                         return false;
                     }
-                    HologramManager.Delete(arguments.At(1));
+                    if (!HologramManager.Delete(arguments.At(1)))
+                    {
+                        response = $"Hologram '{arguments.At(1)}' does not exist!";
+                        return false;
+                    }
                     response = $"Hologram deleted {arguments.At(1)}";
                     return true;
 
@@ -63,14 +75,60 @@ namespace HolographicDisplays.Commands
                         response = "Using: hd edit [name] [new text]";
                         return false;
                     }
-                    HologramManager.Edit(arguments.At(1), string.Join(" ", arguments.Skip(2)));
+                    if (!HologramManager.Edit(arguments.At(1), string.Join(" ", arguments.Skip(2))))
+                    {
+                        response = $"Hologram '{arguments.At(1)}' does not exist!";
+                        return false;
+                    }
                     response = $"Hologram edited {arguments.At(1)}";
                     return true;
 
+                case "movehere":
+                    if (arguments.Count < 2)
+                    {
+                        response = "Using: hd movehere [name]";
+                        return false;
+                    }
+                    if (!HologramManager.MoveHere(player, arguments.At(1)))
+                    {
+                        response = $"Hologram '{arguments.At(1)}' does not exist.";
+                        return false;
+                    }
+                    response = $"Hologram '{arguments.At(1)}' moved here.";
+                    return true;
+
+                case "copy":
+                    if (arguments.Count < 3)
+                    {
+                        response = "Using: hd copy [fromHologram] [toHologram]";
+                        return false;
+                    }
+                    if (!HologramManager.CopyContent(arguments.At(1), arguments.At(2)))
+                    {
+                        response = $"One of the holograms '{arguments.At(1)}' or '{arguments.At(2)}' does not exist!";
+                        return false;
+                    }
+                    response = $"Copied text from '{arguments.At(1)}' to '{arguments.At(2)}'.";
+                    return true;
+
+                case "teleport":
+                    if (arguments.Count < 2)
+                    {
+                        response = "Using: hd teleport [name]";
+                        return false;
+                    }
+                    if (!HologramManager.TeleportTo(player, arguments.At(1)))
+                    {
+                        response = $"Hologram '{arguments.At(1)}' does not exist!";
+                        return false;
+                    }
+                    response = $"Teleportowano do hologramu '{arguments.At(1)}'.";
+                    return true;
+
                 case "list":
-                    var sb = new StringBuilder("Hologram List:\n");
+                    var sb = new StringBuilder("\nHologram List:\n");
                     foreach (var holo in HologramManager.Holograms)
-                        sb.AppendLine($"{holo.Name}: {holo.Content} [{holo.LocalPosition}]");
+                        sb.AppendLine($"{holo.Name}: Zone: {holo.RoomType} - Coords: [{holo.LocalPosition}]");
                     response = sb.ToString();
                     return true;
 

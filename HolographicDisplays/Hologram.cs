@@ -1,9 +1,11 @@
-﻿using AdminToys;
-using Exiled.API.Features;
+﻿using Exiled.API.Features;
 using Exiled.API.Features.Toys;
 using Mirror;
 using UnityEngine;
 using System.Linq;
+using Exiled.API.Extensions;
+using PlayerRoles;
+using AdminToys;
 
 namespace HolographicDisplays
 {
@@ -51,34 +53,25 @@ namespace HolographicDisplays
             }
         }
 
-        public void SyncRotationToNearest()
+        public void SyncRotationPerPlayer()
         {
             if (Toy == null)
                 return;
 
             Vector3 pos = GetWorldPosition();
 
-            Player nearest = null;
-            float minDist = float.MaxValue;
-
             foreach (var player in Player.List)
             {
-                float dist = Vector3.Distance(pos, player.Position);
-                if (dist < minDist && dist <= SyncDistance)
-                {
-                    minDist = dist;
-                    nearest = player;
-                }
+                if (!player.IsConnected || player.Role.Type == RoleTypeId.Spectator)
+                    continue;
+
+                Vector3 dir = player.CameraTransform.position - pos;
+                if (dir.sqrMagnitude < 0.01f) continue;
+
+                Quaternion rot = Quaternion.LookRotation(dir) * Quaternion.Euler(0, 180f, 0);
+
+                player.SendFakeSyncVar(Toy.netIdentity, typeof(TextToy), nameof(TextToy.NetworkRotation), rot);
             }
-
-            if (nearest == null)
-                return;
-
-            Vector3 dir = nearest.CameraTransform.position - pos;
-            if (dir.sqrMagnitude < 0.01f) return;
-
-            Quaternion rot = Quaternion.LookRotation(dir);
-            Toy.transform.rotation = rot * Quaternion.Euler(0, 180f, 0);
         }
     }
 }

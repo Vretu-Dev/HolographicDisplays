@@ -7,12 +7,13 @@ namespace HolographicDisplays
     {
         public static string Replace(string text)
         {
-            text = text.Replace("%server_name%", Server.Name)
-                       .Replace("%players%", Server.PlayerCount.ToString())
-                       .Replace("%max_players%", Server.MaxPlayerCount.ToString())
-                       .Replace("%server_tps%", Server.Tps.ToString())
-                       .Replace("%server_maxtps%", Server.MaxTps.ToString())
-                       .Replace("%round_time%", GetRoundTime());
+            text = text.Replace("{server_name}", Server.Name)
+                       .Replace("{players}", Server.PlayerCount.ToString())
+                       .Replace("{max_players}", Server.MaxPlayerCount.ToString())
+                       .Replace("{server_tps}", Server.Tps.ToString())
+                       .Replace("{server_maxtps}", Server.MaxTps.ToString())
+                       .Replace("{round_time}", GetRoundTime())
+                       .Replace("{time}", GetTime());
 
             return text;
         }
@@ -22,6 +23,12 @@ namespace HolographicDisplays
             TimeSpan elapsed = Round.ElapsedTime;
             string elapsedFormatted = elapsed.ToString(@"mm\:ss");
             return elapsedFormatted;
+        }
+
+        private static string GetTime()
+        {
+            DateTime utc = DateTime.UtcNow.AddHours(HolographicDisplays.Instance.Config.TimeZone);
+            return utc.ToString("HH:mm");
         }
     }
 }

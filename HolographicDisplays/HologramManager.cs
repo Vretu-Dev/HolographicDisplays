@@ -78,23 +78,61 @@ namespace HolographicDisplays
             Save();
         }
 
-        public static void Delete(string name)
+        public static bool Delete(string name)
         {
             var holo = Holograms.FirstOrDefault(h => h.Name == name);
-            if (holo == null) return;
+            if (holo == null) return false;
             holo.Destroy();
             Holograms.Remove(holo);
             Save();
+            return true;
         }
 
-        public static void Edit(string name, string newText)
+        public static bool Edit(string name, string newText)
         {
             var holo = Holograms.FirstOrDefault(h => h.Name == name);
-            if (holo == null) return;
+            if (holo == null) return false;
             holo.Content = newText;
+            Save();
+            return true;
+        }
+
+        public static bool MoveHere(Player player, string name)
+        {
+            var holo = Holograms.FirstOrDefault(h => h.Name == name);
+            if (holo == null) return false;
+
+            var room = player.CurrentRoom;
+            if (room == null) return false;
+
+            Vector3 local = room.Transform.InverseTransformPoint(player.Position);
+
+            holo.RoomType = room.Type.ToString();
+            holo.LocalPosition = local;
             holo.Destroy();
             holo.Spawn();
             Save();
+            return true;
+        }
+
+        public static bool CopyContent(string from, string to)
+        {
+            var holoFrom = Holograms.FirstOrDefault(h => h.Name == from);
+            var holoTo = Holograms.FirstOrDefault(h => h.Name == to);
+            if (holoFrom == null || holoTo == null) return false;
+            holoTo.Content = holoFrom.Content;
+            if (holoTo.Toy != null)
+                holoTo.Toy.TextFormat = Placeholders.Replace(holoTo.Content);
+            Save();
+            return true;
+        }
+
+        public static bool TeleportTo(Player player, string name)
+        {
+            var holo = Holograms.FirstOrDefault(h => h.Name == name);
+            if (holo == null) return false;
+            player.Position = holo.GetWorldPosition();
+            return true;
         }
 
         public static void DestroyAll()
