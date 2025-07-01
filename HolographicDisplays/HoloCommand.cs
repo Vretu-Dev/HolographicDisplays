@@ -32,14 +32,14 @@ namespace HolographicDisplays.Commands
             if (arguments.Count == 0)
             {
                 response = "Commands: \n" +
-                           "hd create [name] [text] - Creates a hologram at your position\n" +
-                           "hd delete [name] - Deletes the hologram\n" +
-                           "hd edit [name] [new text] - Changes the text of the hologram\n" +
-                           "hd movehere [name] - Changes the position of the hologram to your position\n" +
-                           "hd copy [fromHologram] [toHologram] - Copies the contents of one hologram to another\n" +
-                           "hd teleport [name] - Teleports you to the selected hologram\n" +
-                           "hd list \n" +
-                           "hd reload \n";
+                           "<color=yellow>hd create [name] [text]</color> - Creates a hologram at your position\n" +
+                           "<color=yellow>hd delete [name]</color> - Deletes the hologram\n" +
+                           "<color=yellow>hd edit [name] [new text]</color> - Changes the text of the hologram\n" +
+                           "<color=yellow>hd movehere [name]</color> - Moves the hologram to your position\n" +
+                           "<color=yellow>hd copy [fromHologram] [toHologram]</color> - Copies the contents of one hologram to another\n" +
+                           "<color=yellow>hd teleport [name]</color> - Teleports you to the specified hologram\n" +
+                           "<color=yellow>hd list</color> - Displays a list of holograms\n" +
+                           "<color=yellow>hd reload</color> - Reloads all holograms\n";
                 return false;
             }
 
@@ -128,7 +128,7 @@ namespace HolographicDisplays.Commands
                 case "list":
                     var sb = new StringBuilder("\nHologram List:\n");
                     foreach (var holo in HologramManager.Holograms)
-                        sb.AppendLine($"{holo.Name}: Zone: {holo.RoomType} - Coords: [{holo.LocalPosition}]");
+                        sb.AppendLine($"{holo.Name}: {holo.RoomType} - {holo.LocalPosition}");
                     response = sb.ToString();
                     return true;
 

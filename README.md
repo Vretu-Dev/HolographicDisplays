@@ -7,14 +7,17 @@
 - Holograms are automatically loaded on round start and can be refreshed without restarting the server.
 
 ## Commands
-Permission required (by default): `hd.manage`.
+Permission required: `hd.manage`.
 
 ```
-hd create <name> <text>       - Creates a hologram at your position, visible in your current room.
-hd delete <name>              - Deletes the hologram with the given name.
-hd edit <name> <new text>     - Changes the text of the hologram.
+hd create [name] [text]       - Creates a hologram at your position, visible in your current room.
+hd delete [name]              - Deletes the hologram with the given name.
+hd edit [name] [new text]     - Changes the text of the hologram.
+hd movehere [name]            - Moves the hologram to your position.
+hd copy [from] [to]           - Copies the contents of one hologram to another.
+hd teleport [name]            - Teleports you to the specified hologram.
 hd list                       - Lists all holograms with their names, contents, and positions.
-hd reload                    - Reloads all holograms from the config file (use if you manually edit the file).
+hd reload                     - Reloads all holograms from the config file.
 ```
 
 Example usage:
@@ -22,6 +25,6 @@ Example usage:
 hd create Entrance "Welcome to the facility!"
 hd edit Entrance "New message"
 hd delete Entrance
-hd list
 hd reload
+hd list
 ```
