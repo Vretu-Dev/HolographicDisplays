@@ -74,3 +74,6 @@ rotation_update_interval: 10
 # UTC Time Zone | 2 = UTC+2
 time_zone: 2
 ```
+
+## Showcase:
+![1000007474](https://github.com/user-attachments/assets/0fad926f-415b-4437-9f48-0aaa3e6737fb)
