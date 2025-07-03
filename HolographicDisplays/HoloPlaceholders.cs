@@ -35,6 +35,18 @@ namespace HolographicDisplays
                        .Replace("{classd_escaped}", ClassDEscaped.ToString())
                        .Replace("{scientist_escaped}", ScientistEscaped.ToString());
 
+            if (HolographicDisplays.Instance.Config.PlaceholderApi)
+            {
+                try
+                {
+                    text = PlaceholderAPI.API.PlaceholderAPI.SetPlaceholders(text);
+                }
+                catch (Exception ex)
+                {
+                    if (HolographicDisplays.Instance.Config.Debug)
+                        Log.Warn($"PlaceholderAPI exception: {ex}");
+                }
+            }
             return text;
         }
 

@@ -9,6 +9,9 @@ namespace HolographicDisplays
         public bool IsEnabled { get; set; } = true;
         public bool Debug { get; set; } = false;
 
+        [Description("Enable PlaceholderAPI support (if installed).")]
+        public bool PlaceholderApi { get; internal set; } = false;
+
         [Description("Interval for updating hologram placeholders in seconds.")]
         public float PlaceholderUpdateInterval { get; set; } = 2f;
         

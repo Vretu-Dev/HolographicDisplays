@@ -93,6 +93,8 @@ namespace HolographicDisplays
             var holo = Holograms.FirstOrDefault(h => h.Name == name);
             if (holo == null) return false;
             holo.Content = newText;
+            if (holo.Toy != null)
+                holo.Toy.TextFormat = Placeholders.Replace(holo.Content);
             Save();
             return true;
         }
