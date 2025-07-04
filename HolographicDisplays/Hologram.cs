@@ -76,5 +76,27 @@ namespace HolographicDisplays
                 player.SendFakeSyncVar(Toy.netIdentity, typeof(TextToy), nameof(TextToy.NetworkRotation), rot);
             }
         }
+
+        public void SyncTextPerPlayer()
+        {
+            if (Toy == null)
+                return;
+
+            foreach (var player in Player.List)
+            {
+                if (!player.IsConnected || player.Role.Type == RoleTypeId.Spectator)
+                    continue;
+
+                if (Vector3.Distance(player.Position, GetWorldPosition()) > SyncDistance)
+                    continue;
+
+                string text = Placeholders.Replace(Content, player);
+                
+                Log.Info($"[DEBUG] Holo: {Name}, Player: {player.Nickname}, PlaceholderAPI result: {text}");
+
+                player.SendFakeSyncVar(Toy.netIdentity, typeof(TextToy), nameof(TextToy.Network_textFormat), text);
+                Log.Info($"[DEBUG] Holo: {Name}, Player: {player.Nickname}, Text synced successfully.");
+            }
+        }
     }
 }

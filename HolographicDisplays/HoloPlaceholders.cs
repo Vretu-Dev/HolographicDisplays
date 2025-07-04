@@ -22,7 +22,7 @@ namespace HolographicDisplays
             Exiled.Events.Handlers.Server.WaitingForPlayers -= OnWaitingForPlayers;
         }
 
-        public static string Replace(string text)
+        public static string Replace(string text, Player player = null)
         {
             text = text.Replace("{server_name}", Server.Name)
                        .Replace("{players}", Server.PlayerCount.ToString())
@@ -39,7 +39,7 @@ namespace HolographicDisplays
             {
                 try
                 {
-                    text = PlaceholderAPI.API.PlaceholderAPI.SetPlaceholders(text);
+                    text = PlaceholderAPI.API.PlaceholderAPI.SetPlaceholders(player, text);
                 }
                 catch (Exception ex)
                 {

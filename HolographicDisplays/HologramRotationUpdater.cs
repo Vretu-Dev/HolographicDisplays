@@ -1,6 +1,8 @@
-﻿using MEC;
+﻿using Exiled.API.Features;
+using MEC;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace HolographicDisplays
 {
@@ -31,6 +33,7 @@ namespace HolographicDisplays
         {
             string[] fast_placeholders = { "{round_time}" };
             string[] slow_placeholders = { "{players}", "{server_tps}", "{time}", "{total_escaped}", "{classd_escaped}, {scientist_escaped}" };
+            Regex placeholderApiRegex = new Regex("%[^%]+%");
 
             while (true)
             {
@@ -61,8 +64,12 @@ namespace HolographicDisplays
                 {
                     foreach (var holo in HologramManager.Holograms)
                     {
-                        if (holo.Toy != null && slow_placeholders.Any(ph => holo.Content.Contains(ph)))
+                        if (placeholderApiRegex.IsMatch(holo.Content))
+                            holo.SyncTextPerPlayer();
+
+                        else if (holo.Toy != null && slow_placeholders.Any(ph => holo.Content.Contains(ph)))
                             holo.Toy.TextFormat = Placeholders.Replace(holo.Content);
+
                     }
                     _slowUpdateTimer = 0f;
                 }
