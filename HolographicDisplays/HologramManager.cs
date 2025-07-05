@@ -35,7 +35,8 @@ namespace HolographicDisplays
                     Content = holo.Text,
                     RoomType = holo.RoomType,
                     LocalPosition = new Vector3(holo.X, holo.Y, holo.Z),
-                    SyncDistance = holo.SyncDistance > 0 ? holo.SyncDistance : 32f
+                    SyncDistance = holo.SyncDistance,
+                    DefaultRotation = Quaternion.Euler(0, holo.Yaw, 0)
                 };
                 h.Spawn();
                 Holograms.Add(h);
@@ -52,7 +53,8 @@ namespace HolographicDisplays
                 X = h.LocalPosition.x,
                 Y = h.LocalPosition.y,
                 Z = h.LocalPosition.z,
-                SyncDistance = h.SyncDistance
+                SyncDistance = h.SyncDistance,
+                Yaw = h.DefaultRotation.eulerAngles.y
             }).ToList();
             var serializer = new SerializerBuilder().Build();
             File.WriteAllText(FilePath, serializer.Serialize(list));
@@ -154,6 +156,7 @@ namespace HolographicDisplays
             public float Y { get; set; }
             public float Z { get; set; }
             public float SyncDistance { get; set; } = 32f;
+            public float Yaw { get; set; } = 0f;
         }
     }
 }

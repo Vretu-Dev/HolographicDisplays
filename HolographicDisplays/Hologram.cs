@@ -16,6 +16,7 @@ namespace HolographicDisplays
         public string RoomType;
         public Vector3 LocalPosition;
         public float SyncDistance = 32f;
+        public Quaternion DefaultRotation = Quaternion.identity;
         public TextToy Toy { get; private set; }
 
         public Vector3 GetWorldPosition()
@@ -37,7 +38,7 @@ namespace HolographicDisplays
             var prefab = Text.Prefab;
             Vector3 pos = GetWorldPosition();
 
-            Toy = Object.Instantiate(prefab, pos, Quaternion.identity);
+            Toy = Object.Instantiate(prefab, pos, DefaultRotation);
             Toy.TextFormat = Placeholders.Replace(Content);
             Toy.Scale = size ?? new Vector2(0.15f, 0.05f);
 

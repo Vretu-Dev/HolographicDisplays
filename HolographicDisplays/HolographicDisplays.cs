@@ -3,7 +3,7 @@ using System;
 
 namespace HolographicDisplays
 {
-    public class HolographicDisplays : Plugin<Config>
+    public class HolographicDisplays : Plugin<Config, Translations>
     {
         public override string Author => "Vretu";
         public override string Name => "HolographicDisplays";
@@ -26,7 +26,7 @@ namespace HolographicDisplays
             Instance = null;
             Exiled.Events.Handlers.Server.RoundStarted -= OnRoundStarted;
             Exiled.Events.Handlers.Server.WaitingForPlayers -= OnWaitingForPlayers;
-            HologramRotationUpdater.Stop();
+            HologramUpdater.Stop();
             HologramManager.DestroyAll();
             Placeholders.UnregisterEvents();
             base.OnDisabled();
@@ -35,13 +35,13 @@ namespace HolographicDisplays
         private void OnRoundStarted()
         {
             HologramManager.Load();
-            HologramRotationUpdater.Start();
+            HologramUpdater.Start();
         }
 
         private void OnWaitingForPlayers()
         {
             HologramManager.DestroyAll();
-            HologramRotationUpdater.Stop();
+            HologramUpdater.Stop();
         }
     }
 }

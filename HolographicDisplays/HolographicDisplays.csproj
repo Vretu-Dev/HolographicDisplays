@@ -51,11 +51,12 @@
     <Compile Include="Config.cs" />
     <Compile Include="Hologram.cs" />
     <Compile Include="HologramManager.cs" />
-    <Compile Include="HologramRotationUpdater.cs" />
+    <Compile Include="HologramUpdater.cs" />
     <Compile Include="HolographicDisplays.cs" />
     <Compile Include="HoloPlaceholders.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HoloCommand.cs" />
+    <Compile Include="Translations.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ExMod.Exiled">

@@ -47,6 +47,8 @@ hd list
 ## Placeholders:
 
 You can use the following placeholders in hologram text:
+<details>
+<summary><strong>📦 Placeholders (click to expand)</strong></summary>
 
 | Placeholder           | Description                          |
 |-----------------------|--------------------------------------|
@@ -55,12 +57,15 @@ You can use the following placeholders in hologram text:
 | `{max_players}`       | Maximum number of players            |
 | `{server_tps}`        | Current TPS (ticks/sec)              |
 | `{server_maxtps}`     | Max possible TPS (usually 60)        |
-| `{round_time}`        | Round duration (`mm:ss`)             |
+| `{round_time}`        | Round duration in minutes            |
 | `{time}`              | System time (`HH:mm`)                |
 | `{total_escaped}`     | Total escaped players                |
 | `{classd_escaped}`    | Escaped Class-D players              |
 | `{scientist_escaped}` | Escaped scientists                   |
-
+| `{players_alive}`     | Alived players                       |
+| `{warhead_status}`    | Displayed warhead status             |
+| `{RoleTypeId}`        | Number of players in role            |
+</details>
 ---
 
 ## Config:

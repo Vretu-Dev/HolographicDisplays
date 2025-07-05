@@ -1,19 +1,19 @@
 ﻿using MEC;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace HolographicDisplays
 {
-    public static class HologramRotationUpdater
+    public static class HologramUpdater
     {
         private static CoroutineHandle _handle;
         private static float _rotationUpdateTimer = 0f;
-        private static float _fastUpdateTimer = 0f;
-        private static float _slowUpdateTimer = 0f;
+        private static float _placeholderUpdateTimer = 0f;
 
-        private static readonly float FastUpdateInterval = 0.5f;
-        private static float SlowUpdateInterval => HolographicDisplays.Instance.Config.PlaceholderUpdateInterval;
+        private static float PlaceholderUpdateInterval => HolographicDisplays.Instance.Config.PlaceholderUpdateInterval;
         private static float YieldStep => HolographicDisplays.Instance.Config.RotationUpdateInterval / 1000f;
+
+        private static readonly Regex PlaceholderRegex = new Regex(@"\{[a-zA-Z0-9_\-]+\}", RegexOptions.Compiled);
 
         public static void Start()
         {
@@ -29,14 +29,10 @@ namespace HolographicDisplays
 
         private static IEnumerator<float> RotationLoop()
         {
-            string[] fast_placeholders = { "{round_time}" };
-            string[] slow_placeholders = { "{players}", "{server_tps}", "{time}", "{total_escaped}", "{classd_escaped}, {scientist_escaped}" };
-
             while (true)
             {
                 _rotationUpdateTimer += YieldStep;
-                _fastUpdateTimer += YieldStep;
-                _slowUpdateTimer += YieldStep;
+                _placeholderUpdateTimer += YieldStep;
 
                 if (_rotationUpdateTimer >= YieldStep)
                 {
@@ -47,24 +43,14 @@ namespace HolographicDisplays
                     _rotationUpdateTimer = 0f;
                 }
 
-                if (_fastUpdateTimer >= FastUpdateInterval)
+                if (_placeholderUpdateTimer >= PlaceholderUpdateInterval)
                 {
                     foreach (var holo in HologramManager.Holograms)
                     {
-                        if (holo.Toy != null && fast_placeholders.Any(ph => holo.Content.Contains(ph)))
+                        if (holo.Toy != null && PlaceholderRegex.IsMatch(holo.Content))
                             holo.Toy.TextFormat = Placeholders.Replace(holo.Content);
                     }
-                    _fastUpdateTimer = 0f;
-                }
-
-                if (_slowUpdateTimer >= SlowUpdateInterval)
-                {
-                    foreach (var holo in HologramManager.Holograms)
-                    {
-                        if (holo.Toy != null && slow_placeholders.Any(ph => holo.Content.Contains(ph)))
-                            holo.Toy.TextFormat = Placeholders.Replace(holo.Content);
-                    }
-                    _slowUpdateTimer = 0f;
+                    _placeholderUpdateTimer = 0f;
                 }
 
                 yield return Timing.WaitForSeconds(YieldStep);
