@@ -66,6 +66,7 @@ You can use the following placeholders in hologram text:
 | `{warhead_status}`    | Displayed warhead status             |
 | `{RoleTypeId}`        | Number of players in role            |
 </details>
+
 ---
 
 ## Config:
