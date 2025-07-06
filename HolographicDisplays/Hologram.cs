@@ -19,6 +19,18 @@ namespace HolographicDisplays
         public Quaternion DefaultRotation = Quaternion.identity;
         public TextToy Toy { get; private set; }
 
+        public Quaternion GetWorldRotation()
+        {
+            var room = Room.List.FirstOrDefault(r => r.Type.ToString() == RoomType);
+
+            if (room == null)
+            {
+                return DefaultRotation;
+            }
+
+            return room.Transform.rotation * DefaultRotation;
+        }
+
         public Vector3 GetWorldPosition()
         {
             var room = Room.List.FirstOrDefault(r => r.Type.ToString() == RoomType);
@@ -37,8 +49,9 @@ namespace HolographicDisplays
 
             var prefab = Text.Prefab;
             Vector3 pos = GetWorldPosition();
+            Quaternion rot = GetWorldRotation();
 
-            Toy = Object.Instantiate(prefab, pos, DefaultRotation);
+            Toy = Object.Instantiate(prefab, pos, rot);
             Toy.TextFormat = Placeholders.Replace(Content);
             Toy.Scale = size ?? new Vector2(0.15f, 0.05f);
 
