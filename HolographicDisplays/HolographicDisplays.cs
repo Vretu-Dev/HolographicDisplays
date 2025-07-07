@@ -8,7 +8,7 @@ namespace HolographicDisplays
         public override string Author => "Vretu";
         public override string Name => "HolographicDisplays";
         public override string Prefix => "HD";
-        public override Version Version => new Version(1, 3, 1);
+        public override Version Version => new Version(1, 4, 0);
         public override Version RequiredExiledVersion { get; } = new Version(9, 6, 0);
         public static HolographicDisplays Instance { get; private set; }
 
@@ -18,6 +18,8 @@ namespace HolographicDisplays
             Exiled.Events.Handlers.Server.RoundStarted += OnRoundStarted;
             Exiled.Events.Handlers.Server.WaitingForPlayers += OnWaitingForPlayers;
             Placeholders.RegisterEvents();
+            if (Config.ServerSettings)
+                ServerSettings.RegisterSettings();
             base.OnEnabled();
         }
 
@@ -29,6 +31,8 @@ namespace HolographicDisplays
             HologramUpdater.Stop();
             HologramManager.DestroyAll();
             Placeholders.UnregisterEvents();
+            if (Config.ServerSettings)
+                ServerSettings.UnregisterSettings();
             base.OnDisabled();
         }
 

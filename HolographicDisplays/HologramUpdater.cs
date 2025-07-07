@@ -9,7 +9,7 @@ namespace HolographicDisplays
         private static CoroutineHandle _handle;
         private static float _rotationUpdateTimer = 0f;
         private static float _placeholderUpdateTimer = 0f;
-
+        public static float AnimationTick = 0f;
         private static float PlaceholderUpdateInterval => HolographicDisplays.Instance.Config.PlaceholderUpdateInterval;
         private static float YieldStep => HolographicDisplays.Instance.Config.RotationUpdateInterval / 1000f;
 
@@ -33,13 +33,17 @@ namespace HolographicDisplays
             {
                 _rotationUpdateTimer += YieldStep;
                 _placeholderUpdateTimer += YieldStep;
-
+                
                 if (_rotationUpdateTimer >= YieldStep)
                 {
                     foreach (var holo in HologramManager.Holograms)
                     {
                         holo.SyncRotationPerPlayer();
+
+                        if (holo.Toy != null && holo.Content.Contains("{Rainbow:"))
+                            holo.Toy.TextFormat = Placeholders.Replace(holo.Content);
                     }
+                    AnimationTick += YieldStep;
                     _rotationUpdateTimer = 0f;
                 }
 

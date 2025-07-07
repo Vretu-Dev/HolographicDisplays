@@ -59,7 +59,14 @@ namespace HolographicDisplays
                        .Replace("{players_alive}", GetAlivePlayers().ToString())
                        .Replace("{warhead_status}", GetWarheadStatus());
 
-            text = GetCountRoleType(text);
+            text = Regex.Replace(text, @"\{([a-zA-Z0-9_\-]+|add((?:,\{[a-zA-Z0-9_]+\})+))\}", m => HandleRolePlaceholder(m.Groups[1].Value));
+
+            text = Regex.Replace(text, @"\{Rainbow:([^\}]+)\}", m =>
+            {
+                string rainbowText = m.Groups[1].Value;
+                float tick = HologramUpdater.AnimationTick;
+                return AnimatedRainbow(rainbowText, tick);
+            });
 
             if (HolographicDisplays.Instance.Config.PlaceholderApi)
                 text = PlaceholderAPISupport(text);
@@ -91,18 +98,67 @@ namespace HolographicDisplays
             return $"<color={color}>{name}</color>";
         }
 
-        private static string GetCountRoleType(string text)
+        private static string HandleRolePlaceholder(string value)
         {
-            return Regex.Replace(text, @"\{([a-zA-Z0-9_\-]+)\}", m =>
+            if (value.StartsWith("add"))
             {
-                string roleName = m.Groups[1].Value;
-                if (Enum.TryParse<RoleTypeId>(roleName, true, out var role))
+                var roles = Regex.Matches(value, @"\{([A-Za-z0-9_]+)\}")
+                    .Cast<Match>()
+                    .Select(x => x.Groups[1].Value)
+                    .ToList();
+
+                int count = 0;
+                foreach (var roleName in roles)
                 {
-                    int count = Player.List.Count(p => p.Role.Type == role);
-                    return count.ToString();
+                    if (Enum.TryParse<RoleTypeId>(roleName, true, out var role))
+                        count += Player.List.Count(p => p.Role.Type == role);
                 }
-                return m.Value;
-            });
+                return count.ToString();
+            }
+            else if (Enum.TryParse<RoleTypeId>(value, true, out var singleRole))
+            {
+                return Player.List.Count(p => p.Role.Type == singleRole).ToString();
+            }
+            return "0";
+        }
+
+        private static string AnimatedRainbow(string input, float tick)
+        {
+            float speed = 100f;
+            float hueStep = 360f / input.Length;
+            float timeShift = (tick * speed) % 360f;
+
+            var result = "";
+            for (int i = 0; i < input.Length; i++)
+            {
+                float hue = (hueStep * i + timeShift) % 360f;
+                string color = HSVToHex(hue);
+                result += $"<color={color}>{input[i]}</color>";
+            }
+            return result;
+        }
+
+        private static string HSVToHex(float h, float s = 1f, float v = 1f)
+        {
+            int hi = (int)(h / 60f) % 6;
+            float f = h / 60f - hi;
+            v = v * 255f;
+            int vi = (int)v;
+            int p = (int)(v * (1 - s));
+            int q = (int)(v * (1 - f * s));
+            int t = (int)(v * (1 - (1 - f) * s));
+
+            int r = 0, g = 0, b = 0;
+            switch (hi)
+            {
+                case 0: r = vi; g = t; b = p; break;
+                case 1: r = q; g = vi; b = p; break;
+                case 2: r = p; g = vi; b = t; break;
+                case 3: r = p; g = q; b = vi; break;
+                case 4: r = t; g = p; b = vi; break;
+                case 5: r = vi; g = p; b = q; break;
+            }
+            return $"#{r:X2}{g:X2}{b:X2}";
         }
 
         private static string PlaceholderAPISupport(string text)

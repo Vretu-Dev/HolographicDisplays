@@ -38,6 +38,7 @@
     <Reference Include="UnityEngine.CoreModule" HintPath="$(EXILED_REFERENCES)\UnityEngine.CoreModule.dll" Private="false" />
     <Reference Include="UnityEngine.PhysicsModule" HintPath="$(EXILED_REFERENCES)\UnityEngine.PhysicsModule.dll" Private="false" />
     <Reference Include="PlaceholderAPI" HintPath="$(EXILED_REFERENCES)\PlaceholderAPI.dll" Private="false" />
+    <Reference Include="Unity.TextMeshPro" HintPath="$(EXILED_REFERENCES)\Unity.TextMeshPro.dll" Private="false" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -56,6 +57,7 @@
     <Compile Include="HoloPlaceholders.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HoloCommand.cs" />
+    <Compile Include="ServerSettings.cs" />
     <Compile Include="Translations.cs" />
   </ItemGroup>
   <ItemGroup>

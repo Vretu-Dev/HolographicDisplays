@@ -65,6 +65,7 @@ You can use the following placeholders in hologram text:
 | `{players_alive}`     | Alived players                       |
 | `{warhead_status}`    | Displayed warhead status             |
 | `{RoleTypeId}`        | Number of players in role            |
+| `{Rainbow:<text>}`    | Rainbowed text                       |
 </details>
 
 ---
@@ -73,6 +74,10 @@ You can use the following placeholders in hologram text:
 ```yaml
 is_enabled: true
 debug: false
+# Enable PlaceholderAPI support (if installed).
+placeholder_api: false
+# Enable Server Settings GUI.
+server_settings: true
 # Interval for updating hologram placeholders in seconds.
 placeholder_update_interval: 2
 # Interval for updating hologram rotation (player-facing) in milliseconds.
