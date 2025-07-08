@@ -1,5 +1,7 @@
-﻿using MEC;
+﻿using Exiled.API.Features;
+using MEC;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace HolographicDisplays
@@ -9,9 +11,12 @@ namespace HolographicDisplays
         private static CoroutineHandle _handle;
         private static float _rotationUpdateTimer = 0f;
         private static float _placeholderUpdateTimer = 0f;
+        private static float _rainbowUpdateTimer = 0f;
         public static float AnimationTick = 0f;
+
         private static float PlaceholderUpdateInterval => HolographicDisplays.Instance.Config.PlaceholderUpdateInterval;
         private static float YieldStep => HolographicDisplays.Instance.Config.RotationUpdateInterval / 1000f;
+        private static float RainbowUpdateInterval => HolographicDisplays.Instance.Config.RainbowUpdateInterval / 1000f;
 
         private static readonly Regex PlaceholderRegex = new Regex(@"\{[a-zA-Z0-9_\-]+\}", RegexOptions.Compiled);
 
@@ -39,11 +44,7 @@ namespace HolographicDisplays
                     foreach (var holo in HologramManager.Holograms)
                     {
                         holo.SyncRotationPerPlayer();
-
-                        if (holo.Toy != null && holo.Content.Contains("{Rainbow:"))
-                            holo.Toy.TextFormat = Placeholders.Replace(holo.Content);
                     }
-                    AnimationTick += YieldStep;
                     _rotationUpdateTimer = 0f;
                 }
 
@@ -55,6 +56,24 @@ namespace HolographicDisplays
                             holo.Toy.TextFormat = Placeholders.Replace(holo.Content);
                     }
                     _placeholderUpdateTimer = 0f;
+                }
+
+                if (HolographicDisplays.Instance.Config.RainbowAnimation)
+                {
+                    _rainbowUpdateTimer += YieldStep;
+
+                    if (_rainbowUpdateTimer >= RainbowUpdateInterval)
+                    {
+                        var rainbowHolograms = HologramManager.Holograms.Where(h => h.Toy != null && h.Content.Contains("{Rainbow:"));
+
+                        foreach (var holo in rainbowHolograms)
+                        {
+                            holo.Toy.TextFormat = Placeholders.Replace(holo.Content);
+                        }
+                        AnimationTick += RainbowUpdateInterval;
+
+                        _rainbowUpdateTimer = 0f;
+                    }
                 }
 
                 yield return Timing.WaitForSeconds(YieldStep);

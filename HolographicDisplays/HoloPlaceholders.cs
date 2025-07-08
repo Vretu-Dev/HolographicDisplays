@@ -122,17 +122,32 @@ namespace HolographicDisplays
             return "0";
         }
 
+
         private static string AnimatedRainbow(string input, float tick)
         {
-            float speed = 100f;
-            float hueStep = 360f / input.Length;
-            float timeShift = (tick * speed) % 360f;
+            string[] palette = null;
+            var paletteStr = HolographicDisplays.Instance.Config.RainbowPalette;
+            if (!string.IsNullOrWhiteSpace(paletteStr))
+                palette = paletteStr.Split(',').Select(s => s.Trim()).Where(s => s.Length >= 7 && s.StartsWith("#")).ToArray();
 
             var result = "";
+            float speed = HolographicDisplays.Instance.Config.AnimationSpeed;
+            float timeShift = (tick * speed) % 360f;
+
             for (int i = 0; i < input.Length; i++)
             {
-                float hue = (hueStep * i + timeShift) % 360f;
-                string color = HSVToHex(hue);
+                string color;
+                if (palette != null && palette.Length > 0)
+                {
+                    int paletteIndex = (i + (int)(timeShift / (360f / palette.Length))) % palette.Length;
+                    color = palette[paletteIndex];
+                }
+                else
+                {
+                    float hue = ((360f / input.Length) * i + timeShift) % 360f;
+                    color = HSVToHex(hue);
+                }
+
                 result += $"<color={color}>{input[i]}</color>";
             }
             return result;
