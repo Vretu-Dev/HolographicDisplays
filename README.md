@@ -7,7 +7,7 @@
 | Framework | Version    |  Release                                                              |
 |:---------:|:----------:|:----------------------------------------------------------------------:|
 | Exiled    | ≥ 9.6.0    | [⬇️](https://github.com/Vretu-Dev/HolographicDisplays/releases/latest) |
-| Exiled    | ≥ 1.1.0    | [⬇️](https://github.com/Vretu-Dev/HolographicDisplays/releases/latest) |
+| LabAPI    | ≥ 1.1.0    | [⬇️](https://github.com/Vretu-Dev/HolographicDisplays/releases/latest) |
 
 ## Features:
 
@@ -96,7 +96,8 @@ time_zone: 2
 ```
 
 ## Credits:
-LabAPI plugin version using: https://github.com/KadavasKingdom/LabApiExtensions
+LabAPI plugin version using:
+- https://github.com/KadavasKingdom/LabApiExtensions
 
 ## Showcase:
 ![1000007474](https://github.com/user-attachments/assets/0fad926f-415b-4437-9f48-0aaa3e6737fb)
