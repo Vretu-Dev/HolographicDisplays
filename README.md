@@ -7,6 +7,7 @@
 | Framework | Version    |  Release                                                              |
 |:---------:|:----------:|:----------------------------------------------------------------------:|
 | Exiled    | ≥ 9.6.0    | [⬇️](https://github.com/Vretu-Dev/HolographicDisplays/releases/latest) |
+| Exiled    | ≥ 1.1.0    | [⬇️](https://github.com/Vretu-Dev/HolographicDisplays/releases/latest) |
 
 ## Features:
 
@@ -82,9 +83,20 @@ server_settings: true
 placeholder_update_interval: 2
 # Interval for updating hologram rotation (player-facing) in milliseconds.
 rotation_update_interval: 10
+# Is the animation for {Rainbow:} is to be active if false is a static color.
+rainbow_animation: true
+# Interval for updating hologram with Rainbow Animation in milliseconds.
+rainbow_update_interval: 25
+# Speed of the rainbow animation.
+animation_speed: 100
+# Custom rainbow palette. Comma separated hex colors (e.g. #FF0000,#00FF00,#0000FF). If empty, HSV rainbow will be used.
+rainbow_palette: ''
 # UTC Time Zone | 2 = UTC+2
 time_zone: 2
 ```
+
+## Credits:
+LabAPI plugin version using: https://github.com/KadavasKingdom/LabApiExtensions
 
 ## Showcase:
 ![1000007474](https://github.com/user-attachments/assets/0fad926f-415b-4437-9f48-0aaa3e6737fb)
