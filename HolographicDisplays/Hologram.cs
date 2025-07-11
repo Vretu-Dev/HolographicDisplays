@@ -1,11 +1,7 @@
-﻿using Exiled.API.Features;
-using Exiled.API.Features.Toys;
-using Mirror;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Linq;
-using Exiled.API.Extensions;
 using PlayerRoles;
-using AdminToys;
+using LabApi.Features.Wrappers;
 
 namespace HolographicDisplays
 {
@@ -21,7 +17,7 @@ namespace HolographicDisplays
 
         public Quaternion GetWorldRotation()
         {
-            var room = Room.List.FirstOrDefault(r => r.Type.ToString() == RoomType);
+            var room = Room.List.FirstOrDefault(r => r.Name.ToString() == RoomType);
 
             if (room == null)
             {
@@ -33,7 +29,7 @@ namespace HolographicDisplays
 
         public Vector3 GetWorldPosition()
         {
-            var room = Room.List.FirstOrDefault(r => r.Type.ToString() == RoomType);
+            var room = Room.List.FirstOrDefault(r => r.Name.ToString() == RoomType);
 
             if (room == null)
             {
@@ -43,26 +39,22 @@ namespace HolographicDisplays
             return room.Transform.TransformPoint(LocalPosition);
         }
 
-        public void Spawn(Vector2? size = null)
+        public void Spawn()
         {
             Destroy();
 
-            var prefab = Text.Prefab;
             Vector3 pos = GetWorldPosition();
             Quaternion rot = GetWorldRotation();
 
-            Toy = Object.Instantiate(prefab, pos, rot);
+            Toy = TextToy.Create(pos, rot, null, true);
             Toy.TextFormat = Placeholders.Replace(Content);
-            Toy.Scale = size ?? new Vector2(0.15f, 0.05f);
-
-            NetworkServer.Spawn(Toy.gameObject);
         }
 
         public void Destroy()
         {
             if (Toy != null)
             {
-                NetworkServer.Destroy(Toy.gameObject);
+                Toy.Destroy();
                 Toy = null;
             }
         }
@@ -76,18 +68,18 @@ namespace HolographicDisplays
 
             foreach (var player in Player.List)
             {
-                if (!player.IsConnected || player.Role.Type == RoleTypeId.Spectator)
+                if (player.Role == RoleTypeId.Spectator)
                     continue;
 
                 if (Vector3.Distance(player.Position, pos) > SyncDistance)
                     continue;
 
-                Vector3 dir = player.CameraTransform.position - pos;
+                Vector3 dir = player.Camera.position - pos;
                 if (dir.sqrMagnitude < 0.01f) continue;
 
-                Quaternion rot = Quaternion.LookRotation(dir) * Quaternion.Euler(0, 180f, 0);
+                Quaternion rot = Quaternion.LookRotation(dir) * Quaternion.Euler(0f, 180f, 0f);
 
-                player.SendFakeSyncVar(Toy.netIdentity, typeof(TextToy), nameof(TextToy.NetworkRotation), rot);
+                player.SendFakeSyncVar(Toy.Base, 2, rot);
             }
         }
     }

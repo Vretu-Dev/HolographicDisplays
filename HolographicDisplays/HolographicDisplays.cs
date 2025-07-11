@@ -1,41 +1,46 @@
-﻿using Exiled.API.Features;
-using System;
+﻿using System;
+using LabApi.Features;
+using LabApi.Loader;
+using Loader = LabApi.Loader.Features.Plugins.Plugin;
 
 namespace HolographicDisplays
 {
-    public class HolographicDisplays : Plugin<Config, Translations>
+    public class HolographicDisplays : Loader
     {
         public override string Author => "Vretu";
         public override string Name => "HolographicDisplays";
-        public override string Prefix => "HD";
+        public override string Description => "Displayed Holograms.";
         public override Version Version => new Version(1, 4, 1);
-        public override Version RequiredExiledVersion { get; } = new Version(9, 6, 0);
+        public override Version RequiredApiVersion { get; } = new Version(LabApiProperties.CompiledVersion);
         public static HolographicDisplays Instance { get; private set; }
+        public Translations Translation { get; private set; }
+        public Config Config { get; private set; }
 
-        public override void OnEnabled()
+        public override void Enable()
         {
             Instance = this;
-            Exiled.Events.Handlers.Server.RoundStarted += OnRoundStarted;
-            Exiled.Events.Handlers.Server.WaitingForPlayers += OnWaitingForPlayers;
+            LabApi.Events.Handlers.ServerEvents.RoundStarted += OnRoundStarted;
+            LabApi.Events.Handlers.ServerEvents.WaitingForPlayers += OnWaitingForPlayers;
             Placeholders.RegisterEvents();
-            if (Config.ServerSettings)
-                ServerSettings.RegisterSettings();
-            base.OnEnabled();
         }
 
-        public override void OnDisabled()
+        public override void Disable()
         {
             Instance = null;
-            Exiled.Events.Handlers.Server.RoundStarted -= OnRoundStarted;
-            Exiled.Events.Handlers.Server.WaitingForPlayers -= OnWaitingForPlayers;
+            LabApi.Events.Handlers.ServerEvents.RoundStarted -= OnRoundStarted;
+            LabApi.Events.Handlers.ServerEvents.WaitingForPlayers -= OnWaitingForPlayers;
             HologramUpdater.Stop();
             HologramManager.DestroyAll();
             Placeholders.UnregisterEvents();
-            if (Config.ServerSettings)
-                ServerSettings.UnregisterSettings();
-            base.OnDisabled();
         }
 
+        public override void LoadConfigs()
+        {
+            this.TryLoadConfig("config.yml", out Config config);
+            Config = config ?? new Config();
+            this.TryLoadConfig("translation.yml", out Translations translation);
+            Translation = translation ?? new Translations();
+        }
         private void OnRoundStarted()
         {
             HologramManager.Load();

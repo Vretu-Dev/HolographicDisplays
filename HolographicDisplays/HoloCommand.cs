@@ -1,6 +1,5 @@
 ﻿using CommandSystem;
-using Exiled.Permissions.Extensions;
-using Exiled.API.Features;
+using LabApi.Features.Wrappers;
 using System.Text;
 using System.Linq;
 using RemoteAdmin;
@@ -13,7 +12,7 @@ namespace HolographicDisplays.Commands
     {
         public string Command => "HolographicDisplays";
         public string[] Aliases => new string[] { "hd" };
-        public string Description => "Holograms Managment";
+        public string Description => "Holograms Management";
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
@@ -23,9 +22,9 @@ namespace HolographicDisplays.Commands
                 return false;
             }
 
-            if (!player.CheckPermission("hd.manage"))
+            if (!Misc.CheckPermission(sender, new[] { PlayerPermissions.ServerConfigs }))
             {
-                response = "You don't have permision: hd.manage!";
+                response = "You don't have permission: ServerConfigs!";
                 return false;
             }
 
@@ -139,7 +138,7 @@ namespace HolographicDisplays.Commands
                     return true;
 
                 default:
-                    response = "Uknown subcommand.";
+                    response = "Unknown subcommand.";
                     return false;
             }
         }

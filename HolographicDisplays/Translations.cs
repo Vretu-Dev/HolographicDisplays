@@ -1,10 +1,16 @@
-﻿using Exiled.API.Enums;
-using Exiled.API.Interfaces;
+﻿using LabApi.Features.Wrappers;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace HolographicDisplays
 {
+    public enum WarheadStatus
+    {
+        Armed,
+        NotArmed,
+        InProgress,
+        Detonated
+    }
     public class WarheadStatusName
     {
         public WarheadStatus Status { get; set; }
@@ -12,7 +18,7 @@ namespace HolographicDisplays
         public string Color { get; set; }
     }
 
-    public class Translations : ITranslation
+    public class Translations
     {
         public List<WarheadStatusName> WarheadStatuses { get; set; } = new List<WarheadStatusName>()
         {

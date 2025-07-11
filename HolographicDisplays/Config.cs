@@ -1,10 +1,8 @@
-﻿using Exiled.API.Interfaces;
-using System.ComponentModel;
-using UnityEngine.PlayerLoop;
+﻿using System.ComponentModel;
 
 namespace HolographicDisplays
 {
-    public class Config : IConfig
+    public class Config
     {
         public bool IsEnabled { get; set; } = true;
         public bool Debug { get; set; } = false;

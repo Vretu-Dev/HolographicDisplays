@@ -1,5 +1,6 @@
-﻿using Exiled.API.Features;
-using Exiled.Events.EventArgs.Player;
+﻿using LabApi.Events.Arguments.PlayerEvents;
+using LabApi.Features.Console;
+using LabApi.Features.Wrappers;
 using PlayerRoles;
 using System;
 using System.Linq;
@@ -15,25 +16,25 @@ namespace HolographicDisplays
 
         public static void RegisterEvents()
         {
-            Exiled.Events.Handlers.Player.Escaping += OnPlayerEscaped;
-            Exiled.Events.Handlers.Server.WaitingForPlayers += OnWaitingForPlayers;
+            LabApi.Events.Handlers.PlayerEvents.Escaping += OnPlayerEscaped;
+            LabApi.Events.Handlers.ServerEvents.WaitingForPlayers += OnWaitingForPlayers;
         }
         public static void UnregisterEvents()
         {
-            Exiled.Events.Handlers.Player.Escaping -= OnPlayerEscaped;
-            Exiled.Events.Handlers.Server.WaitingForPlayers -= OnWaitingForPlayers;
+            LabApi.Events.Handlers.PlayerEvents.Escaping -= OnPlayerEscaped;
+            LabApi.Events.Handlers.ServerEvents.WaitingForPlayers -= OnWaitingForPlayers;
         }
 
-        private static void OnPlayerEscaped(EscapingEventArgs ev)
+        private static void OnPlayerEscaped(PlayerEscapingEventArgs ev)
         {
             if (ev.Player == null || !ev.IsAllowed)
                 return;
 
             TotalEscaped++;
 
-            if (ev.Player.Role.Type == RoleTypeId.ClassD)
+            if (ev.Player.Role == RoleTypeId.ClassD)
                 ClassDEscaped++;
-            else if (ev.Player.Role.Type == RoleTypeId.Scientist)
+            else if (ev.Player.Role == RoleTypeId.Scientist)
                 ScientistEscaped++;
         }
 
@@ -46,9 +47,9 @@ namespace HolographicDisplays
 
         public static string Replace(string text)
         {
-            text = text.Replace("{server_name}", Server.Name)
+            text = text.Replace("{server_name}", Server.ServerListName)
                        .Replace("{players}", Server.PlayerCount.ToString())
-                       .Replace("{max_players}", Server.MaxPlayerCount.ToString())
+                       .Replace("{max_players}", Server.MaxPlayers.ToString())
                        .Replace("{server_tps}", Server.Tps.ToString())
                        .Replace("{server_maxtps}", Server.MaxTps.ToString())
                        .Replace("{round_time}", GetRoundTime())
@@ -76,7 +77,7 @@ namespace HolographicDisplays
 
         private static string GetRoundTime()
         {
-            TimeSpan elapsed = Round.ElapsedTime;
+            TimeSpan elapsed = Round.Duration;
             return ((int)elapsed.TotalMinutes).ToString();
         }
 
@@ -93,8 +94,9 @@ namespace HolographicDisplays
 
         private static string GetWarheadStatus()
         {
-            var name = HolographicDisplays.Instance.Translation.GetWarheadStatusName(Warhead.Status);
-            var color = HolographicDisplays.Instance.Translation.GetWarheadStatusColor(Warhead.Status);
+            WarheadStatus currentStatus = GetCurrentWarheadStatus();
+            var name = HolographicDisplays.Instance.Translation.GetWarheadStatusName(currentStatus);
+            var color = HolographicDisplays.Instance.Translation.GetWarheadStatusColor(currentStatus);
             return $"<color={color}>{name}</color>";
         }
 
@@ -111,13 +113,13 @@ namespace HolographicDisplays
                 foreach (var roleName in roles)
                 {
                     if (Enum.TryParse<RoleTypeId>(roleName, true, out var role))
-                        count += Player.List.Count(p => p.Role.Type == role);
+                        count += Player.List.Count(p => p.Role == role);
                 }
                 return count.ToString();
             }
             else if (Enum.TryParse<RoleTypeId>(value, true, out var singleRole))
             {
-                return Player.List.Count(p => p.Role.Type == singleRole).ToString();
+                return Player.List.Count(p => p.Role == singleRole).ToString();
             }
             return "0";
         }
@@ -176,6 +178,17 @@ namespace HolographicDisplays
             return $"#{r:X2}{g:X2}{b:X2}";
         }
 
+        private static WarheadStatus GetCurrentWarheadStatus()
+        {
+            if (Warhead.IsDetonated)
+                return WarheadStatus.Detonated;
+            if (Warhead.IsDetonationInProgress)
+                return WarheadStatus.InProgress;
+            if (Warhead.LeverStatus == Warhead.IsLocked)
+                return WarheadStatus.NotArmed;
+            return WarheadStatus.Armed;
+        }
+
         private static string PlaceholderAPISupport(string text)
         {
             try
@@ -184,7 +197,7 @@ namespace HolographicDisplays
             }
             catch (Exception ex)
             {
-                Log.Warn($"PlaceholderAPI exception: {ex}");
+                Logger.Warn($"PlaceholderAPI exception: {ex}");
             }
 
             return text;

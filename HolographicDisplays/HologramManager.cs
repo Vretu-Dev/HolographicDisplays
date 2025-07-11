@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using LabApi.Features.Wrappers;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Exiled.API.Features;
 using UnityEngine;
 using YamlDotNet.Serialization;
 
@@ -10,7 +10,7 @@ namespace HolographicDisplays
     public static class HologramManager
     {
         public static List<Hologram> Holograms { get; } = new();
-        private static readonly string FilePath = Path.Combine(Paths.Configs, "holograms.yml");
+        private static readonly string FilePath = Path.Combine(LabApi.Loader.Features.Paths.PathManager.Configs.FullName, "holograms.yml");
 
         public static void Load()
         {
@@ -63,7 +63,7 @@ namespace HolographicDisplays
         public static void Create(Player player, string name, string text)
         {
             if (Holograms.Any(h => h.Name == name)) return;
-            var room = player.CurrentRoom;
+            var room = player.Room;
             if (room == null) return;
 
             Vector3 local = room.Transform.InverseTransformPoint(player.Position);
@@ -72,7 +72,7 @@ namespace HolographicDisplays
             {
                 Name = name,
                 Content = text,
-                RoomType = room.Type.ToString(),
+                RoomType = room.Name.ToString(),
                 LocalPosition = local
             };
             hologram.Spawn();
@@ -106,12 +106,12 @@ namespace HolographicDisplays
             var holo = Holograms.FirstOrDefault(h => h.Name == name);
             if (holo == null) return false;
 
-            var room = player.CurrentRoom;
+            var room = player.Room;
             if (room == null) return false;
 
             Vector3 local = room.Transform.InverseTransformPoint(player.Position);
 
-            holo.RoomType = room.Type.ToString();
+            holo.RoomType = room.Name.ToString();
             holo.LocalPosition = local;
             holo.Destroy();
             holo.Spawn();
