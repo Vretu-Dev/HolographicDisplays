@@ -4,10 +4,11 @@ using System.Linq;
 using Exiled.API.Features;
 using UnityEngine;
 using YamlDotNet.Serialization;
+using Placeholder = HolographicDisplays.Placeholders.Placeholders;
 
-namespace HolographicDisplays
+namespace HolographicDisplays.Holograms
 {
-    public static class HologramManager
+    public static class Manager
     {
         public static List<Hologram> Holograms { get; } = new();
         private static readonly string FilePath = Path.Combine(Paths.Configs, "holograms.yml");
@@ -96,7 +97,7 @@ namespace HolographicDisplays
             if (holo == null) return false;
             holo.Content = newText;
             if (holo.Toy != null)
-                holo.Toy.TextFormat = Placeholders.Replace(holo.Content);
+                holo.Toy.TextFormat = Placeholder.Replace(holo.Content);
             Save();
             return true;
         }
@@ -126,7 +127,7 @@ namespace HolographicDisplays
             if (holoFrom == null || holoTo == null) return false;
             holoTo.Content = holoFrom.Content;
             if (holoTo.Toy != null)
-                holoTo.Toy.TextFormat = Placeholders.Replace(holoTo.Content);
+                holoTo.Toy.TextFormat = Placeholder.Replace(holoTo.Content);
             Save();
             return true;
         }
@@ -147,16 +148,6 @@ namespace HolographicDisplays
             Holograms.Clear();
         }
 
-        private class HoloData
-        {
-            public string Name { get; set; }
-            public string Text { get; set; }
-            public string RoomType { get; set; }
-            public float X { get; set; }
-            public float Y { get; set; }
-            public float Z { get; set; }
-            public float SyncDistance { get; set; } = 32f;
-            public float Yaw { get; set; } = 0f;
-        }
+        
     }
 }

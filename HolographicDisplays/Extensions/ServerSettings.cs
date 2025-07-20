@@ -1,9 +1,10 @@
 ﻿using Exiled.API.Features.Core.UserSettings;
 using Exiled.Events.EventArgs.Player;
 using Exiled.Permissions.Extensions;
+using HolographicDisplays.Holograms;
 using System.Linq;
 
-namespace HolographicDisplays
+namespace HolographicDisplays.Extensions
 {
     public static class ServerSettings
     {
@@ -45,13 +46,13 @@ namespace HolographicDisplays
                         player.SendConsoleMessage("Enter the name and content separated by |", "red");
                         return;
                     }
-                    if (HologramManager.Holograms.Exists(h => h.Name == name))
+                    if (Manager.Holograms.Exists(h => h.Name == name))
                     {
                         player.SendConsoleMessage("A hologram with that name already exists!", "yellow");
                         return;
                     }
 
-                    HologramManager.Create(player, name, text);
+                    Manager.Create(player, name, text);
                     player.SendConsoleMessage($"Hologram created '{name}'", "green");
                 }
             );
@@ -78,7 +79,7 @@ namespace HolographicDisplays
                         return;
                     }
 
-                    if (!HologramManager.Edit(name, text))
+                    if (!Manager.Edit(name, text))
                     {
                         player.SendConsoleMessage($"Hologram '{name}' does not exist!", "red");
                         return;
@@ -108,7 +109,7 @@ namespace HolographicDisplays
                         return;
                     }
 
-                    if (!HologramManager.Delete(name))
+                    if (!Manager.Delete(name))
                     {
                         player.SendConsoleMessage($"Hologram '{name}' does not exist!", "red");
                         return;
@@ -138,7 +139,7 @@ namespace HolographicDisplays
                         return;
                     }
 
-                    if (!HologramManager.TeleportTo(player, name))
+                    if (!Manager.TeleportTo(player, name))
                     {
                         player.SendConsoleMessage($"Hologram '{name}' does not exist!", "red");
                         return;
@@ -168,7 +169,7 @@ namespace HolographicDisplays
                         return;
                     }
 
-                    if (!HologramManager.MoveHere(player, name))
+                    if (!Manager.MoveHere(player, name))
                     {
                         player.SendConsoleMessage($"Hologram '{name}' does not exist!", "red");
                         return;
@@ -200,7 +201,7 @@ namespace HolographicDisplays
                         return;
                     }
 
-                    if (!HologramManager.CopyContent(from, to))
+                    if (!Manager.CopyContent(from, to))
                     {
                         player.SendConsoleMessage($"One of the holograms '{from}' or '{to}' does not exist!", "red");
                         return;
@@ -216,8 +217,8 @@ namespace HolographicDisplays
                 buttonText: "Reload",
                 onChanged: (player, setting) =>
                 {
-                    HologramManager.DestroyAll();
-                    HologramManager.Load();
+                    Manager.DestroyAll();
+                    Manager.Load();
                     player.SendConsoleMessage("All holograms reloaded!", "green");
                 }
             );

@@ -51,13 +51,16 @@
   <ItemGroup>
     <Compile Include="Config.cs" />
     <Compile Include="Hologram.cs" />
-    <Compile Include="HologramManager.cs" />
-    <Compile Include="HologramUpdater.cs" />
-    <Compile Include="HolographicDisplays.cs" />
-    <Compile Include="HoloPlaceholders.cs" />
+    <Compile Include="Holograms\API.cs" />
+    <Compile Include="Holograms\Manager.cs" />
+    <Compile Include="Holograms\Updater.cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="Placeholders\Placeholders.cs" />
+    <Compile Include="Placeholders\Events.cs" />
+    <Compile Include="Placeholders\Updater.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="HoloCommand.cs" />
-    <Compile Include="ServerSettings.cs" />
+    <Compile Include="Holograms\Commands.cs" />
+    <Compile Include="Extensions\ServerSettings.cs" />
     <Compile Include="Translations.cs" />
   </ItemGroup>
   <ItemGroup>

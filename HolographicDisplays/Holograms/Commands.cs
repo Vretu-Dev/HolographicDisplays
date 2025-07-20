@@ -6,10 +6,10 @@ using System.Linq;
 using RemoteAdmin;
 using System;
 
-namespace HolographicDisplays.Commands
+namespace HolographicDisplays.Holograms
 {
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
-    public class HoloCommand : ICommand
+    public class Commands : ICommand
     {
         public string Command => "HolographicDisplays";
         public string[] Aliases => new string[] { "hd" };
@@ -51,7 +51,7 @@ namespace HolographicDisplays.Commands
                         response = "Using: hd create [name] [text]";
                         return false;
                     }
-                    HologramManager.Create(player, arguments.At(1), string.Join(" ", arguments.Skip(2)));
+                    Manager.Create(player, arguments.At(1), string.Join(" ", arguments.Skip(2)));
                     response = $"Hologram created {arguments.At(1)}";
                     return true;
 
@@ -61,7 +61,7 @@ namespace HolographicDisplays.Commands
                         response = "Using: hd delete [name]";
                         return false;
                     }
-                    if (!HologramManager.Delete(arguments.At(1)))
+                    if (!Manager.Delete(arguments.At(1)))
                     {
                         response = $"Hologram '{arguments.At(1)}' does not exist!";
                         return false;
@@ -75,7 +75,7 @@ namespace HolographicDisplays.Commands
                         response = "Using: hd edit [name] [new text]";
                         return false;
                     }
-                    if (!HologramManager.Edit(arguments.At(1), string.Join(" ", arguments.Skip(2))))
+                    if (!Manager.Edit(arguments.At(1), string.Join(" ", arguments.Skip(2))))
                     {
                         response = $"Hologram '{arguments.At(1)}' does not exist!";
                         return false;
@@ -89,7 +89,7 @@ namespace HolographicDisplays.Commands
                         response = "Using: hd movehere [name]";
                         return false;
                     }
-                    if (!HologramManager.MoveHere(player, arguments.At(1)))
+                    if (!Manager.MoveHere(player, arguments.At(1)))
                     {
                         response = $"Hologram '{arguments.At(1)}' does not exist.";
                         return false;
@@ -103,7 +103,7 @@ namespace HolographicDisplays.Commands
                         response = "Using: hd copy [fromHologram] [toHologram]";
                         return false;
                     }
-                    if (!HologramManager.CopyContent(arguments.At(1), arguments.At(2)))
+                    if (!Manager.CopyContent(arguments.At(1), arguments.At(2)))
                     {
                         response = $"One of the holograms '{arguments.At(1)}' or '{arguments.At(2)}' does not exist!";
                         return false;
@@ -117,7 +117,7 @@ namespace HolographicDisplays.Commands
                         response = "Using: hd teleport [name]";
                         return false;
                     }
-                    if (!HologramManager.TeleportTo(player, arguments.At(1)))
+                    if (!Manager.TeleportTo(player, arguments.At(1)))
                     {
                         response = $"Hologram '{arguments.At(1)}' does not exist!";
                         return false;
@@ -127,19 +127,19 @@ namespace HolographicDisplays.Commands
 
                 case "list":
                     var sb = new StringBuilder("\nHologram List:\n");
-                    foreach (var holo in HologramManager.Holograms)
+                    foreach (var holo in Manager.Holograms)
                         sb.AppendLine($"{holo.Name}: {holo.RoomType} - {holo.LocalPosition}");
                     response = sb.ToString();
                     return true;
 
                 case "reload":
-                    HologramManager.DestroyAll();
-                    HologramManager.Load();
+                    Manager.DestroyAll();
+                    Manager.Load();
                     response = "Holograms reloaded";
                     return true;
 
                 default:
-                    response = "Uknown subcommand.";
+                    response = "Unknown subcommand.";
                     return false;
             }
         }
