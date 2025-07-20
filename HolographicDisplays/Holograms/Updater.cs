@@ -1,7 +1,5 @@
 ﻿using MEC;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace HolographicDisplays.Holograms
 {
@@ -26,7 +24,7 @@ namespace HolographicDisplays.Holograms
                 Timing.KillCoroutines(_rotation);
 
             if (_placeholder.IsRunning)
-                Timing.KillCoroutines(_rotation);
+                Timing.KillCoroutines(_placeholder);
         }
 
         private static IEnumerator<float> RotationLoop()

@@ -46,13 +46,13 @@ namespace HolographicDisplays.Extensions
                         player.SendConsoleMessage("Enter the name and content separated by |", "red");
                         return;
                     }
-                    if (Manager.Holograms.Exists(h => h.Name == name))
+
+                    if (!Manager.Create(player, name, text))
                     {
-                        player.SendConsoleMessage("A hologram with that name already exists!", "yellow");
+                        player.SendConsoleMessage($"Cannot create hologram '{name}'! It may already exist or room is invalid.", "yellow");
                         return;
                     }
 
-                    Manager.Create(player, name, text);
                     player.SendConsoleMessage($"Hologram created '{name}'", "green");
                 }
             );

@@ -61,11 +61,13 @@ namespace HolographicDisplays.Holograms
             File.WriteAllText(FilePath, serializer.Serialize(list));
         }
 
-        public static void Create(Player player, string name, string text)
+        public static bool Create(Player player, string name, string text)
         {
-            if (Holograms.Any(h => h.Name == name)) return;
+            if (Holograms.Any(h => h.Name == name))
+                return false;
             var room = player.CurrentRoom;
-            if (room == null) return;
+            if (room == null)
+                return false;
 
             Vector3 local = room.Transform.InverseTransformPoint(player.Position);
 
@@ -79,6 +81,7 @@ namespace HolographicDisplays.Holograms
             hologram.Spawn();
             Holograms.Add(hologram);
             Save();
+            return true;
         }
 
         public static bool Delete(string name)

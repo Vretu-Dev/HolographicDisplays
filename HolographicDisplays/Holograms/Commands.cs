@@ -51,8 +51,12 @@ namespace HolographicDisplays.Holograms
                         response = "Using: hd create [name] [text]";
                         return false;
                     }
-                    Manager.Create(player, arguments.At(1), string.Join(" ", arguments.Skip(2)));
-                    response = $"Hologram created {arguments.At(1)}";
+                    if (!Manager.Create(player, arguments.At(1), string.Join(" ", arguments.Skip(2))))
+                    {
+                        response = $"Cannot create hologram '{arguments.At(1)}'! It may already exist or room is invalid.";
+                        return false;
+                    }
+                    response = $"Hologram created '{arguments.At(1)}'";
                     return true;
 
                 case "delete":
@@ -66,7 +70,7 @@ namespace HolographicDisplays.Holograms
                         response = $"Hologram '{arguments.At(1)}' does not exist!";
                         return false;
                     }
-                    response = $"Hologram deleted {arguments.At(1)}";
+                    response = $"Hologram deleted '{arguments.At(1)}'";
                     return true;
 
                 case "edit":
@@ -80,7 +84,7 @@ namespace HolographicDisplays.Holograms
                         response = $"Hologram '{arguments.At(1)}' does not exist!";
                         return false;
                     }
-                    response = $"Hologram edited {arguments.At(1)}";
+                    response = $"Hologram edited '{arguments.At(1)}'";
                     return true;
 
                 case "movehere":
@@ -122,7 +126,7 @@ namespace HolographicDisplays.Holograms
                         response = $"Hologram '{arguments.At(1)}' does not exist!";
                         return false;
                     }
-                    response = $"Teleportowano do hologramu '{arguments.At(1)}'.";
+                    response = $"Teleported to hologram '{arguments.At(1)}'.";
                     return true;
 
                 case "list":

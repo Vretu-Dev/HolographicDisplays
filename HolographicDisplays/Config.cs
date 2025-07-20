@@ -1,6 +1,5 @@
 ﻿using Exiled.API.Interfaces;
 using System.ComponentModel;
-using UnityEngine.PlayerLoop;
 
 namespace HolographicDisplays
 {

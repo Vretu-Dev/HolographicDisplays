@@ -1,7 +1,6 @@
 ﻿using Exiled.Events.EventArgs.Player;
 using HolographicDisplays.Holograms;
 using PlayerRoles;
-using System.Text.RegularExpressions;
 
 namespace HolographicDisplays.Placeholders
 {
