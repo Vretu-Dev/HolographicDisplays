@@ -6,6 +6,7 @@ using System.Linq;
 using Exiled.API.Extensions;
 using PlayerRoles;
 using AdminToys;
+using Placeholder = HolographicDisplays.Placeholders.Placeholders;
 
 namespace HolographicDisplays
 {
@@ -52,7 +53,7 @@ namespace HolographicDisplays
             Quaternion rot = GetWorldRotation();
 
             Toy = Object.Instantiate(prefab, pos, rot);
-            Toy.TextFormat = Placeholders.Replace(Content);
+            Toy.TextFormat = Placeholder.Replace(Content);
             Toy.Scale = size ?? new Vector2(0.15f, 0.05f);
 
             NetworkServer.Spawn(Toy.gameObject);
