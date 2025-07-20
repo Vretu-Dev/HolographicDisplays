@@ -10,7 +10,7 @@ namespace HolographicDisplays
         public override string Author => "Vretu";
         public override string Name => "HolographicDisplays";
         public override string Prefix => "HD";
-        public override Version Version => new Version(1, 4, 1);
+        public override Version Version => new Version(1, 5, 0);
         public override Version RequiredExiledVersion { get; } = new Version(9, 6, 0);
         public static Main Instance { get; private set; }
 
