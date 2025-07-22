@@ -39,6 +39,7 @@ namespace HolographicDisplays.Holograms
                     SyncDistance = holo.SyncDistance,
                     DefaultRotation = Quaternion.Euler(0, holo.Yaw, 0)
                 };
+
                 h.Spawn();
                 Holograms.Add(h);
             }
@@ -57,17 +58,17 @@ namespace HolographicDisplays.Holograms
                 SyncDistance = h.SyncDistance,
                 Yaw = h.DefaultRotation.eulerAngles.y
             }).ToList();
+
             var serializer = new SerializerBuilder().Build();
             File.WriteAllText(FilePath, serializer.Serialize(list));
         }
 
         public static bool Create(Player player, string name, string text)
         {
-            if (Holograms.Any(h => h.Name == name))
-                return false;
+            if (Holograms.Any(h => h.Name == name)) return false;
+
             var room = player.CurrentRoom;
-            if (room == null)
-                return false;
+            if (room == null) return false;
 
             Vector3 local = room.Transform.InverseTransformPoint(player.Position);
 
@@ -78,6 +79,7 @@ namespace HolographicDisplays.Holograms
                 RoomType = room.Type.ToString(),
                 LocalPosition = local
             };
+
             hologram.Spawn();
             Holograms.Add(hologram);
             Save();
@@ -88,6 +90,7 @@ namespace HolographicDisplays.Holograms
         {
             var holo = Holograms.FirstOrDefault(h => h.Name == name);
             if (holo == null) return false;
+
             holo.Destroy();
             Holograms.Remove(holo);
             Save();
@@ -98,9 +101,12 @@ namespace HolographicDisplays.Holograms
         {
             var holo = Holograms.FirstOrDefault(h => h.Name == name);
             if (holo == null) return false;
+            
             holo.Content = newText;
+
             if (holo.Toy != null)
                 holo.Toy.TextFormat = Placeholder.Replace(holo.Content);
+            
             Save();
             return true;
         }
@@ -127,10 +133,14 @@ namespace HolographicDisplays.Holograms
         {
             var holoFrom = Holograms.FirstOrDefault(h => h.Name == from);
             var holoTo = Holograms.FirstOrDefault(h => h.Name == to);
+
             if (holoFrom == null || holoTo == null) return false;
+
             holoTo.Content = holoFrom.Content;
+
             if (holoTo.Toy != null)
                 holoTo.Toy.TextFormat = Placeholder.Replace(holoTo.Content);
+
             Save();
             return true;
         }
@@ -139,6 +149,7 @@ namespace HolographicDisplays.Holograms
         {
             var holo = Holograms.FirstOrDefault(h => h.Name == name);
             if (holo == null) return false;
+
             player.Position = holo.GetWorldPosition();
             return true;
         }
@@ -150,7 +161,5 @@ namespace HolographicDisplays.Holograms
 
             Holograms.Clear();
         }
-
-        
     }
 }
